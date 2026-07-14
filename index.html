@@ -3,16 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Module 8 Express.js and REST APIs Notes</title>
+<title>Module 8 Express.js and REST APIs Complete Notes</title>
 <style>
   :root {
     --navy: #10243d;
-    --blue: #2563eb;
-    --green: #16a34a;
-    --orange: #f97316;
-    --red: #dc2626;
-    --soft: #eef6ff;
-    --line: #d9e4ef;
+    --blue: #2457d6;
+    --green: #16803c;
+    --orange: #d97706;
+    --red: #c02626;
+    --soft-blue: #eef6ff;
+    --soft-green: #effdf4;
+    --soft-orange: #fff7ed;
+    --soft-red: #fff1f2;
+    --line: #d8e3ef;
     --code: #0f172a;
     --text: #172033;
   }
@@ -21,18 +24,16 @@
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     color: var(--text);
-    background: #f6f9fd;
-    line-height: 1.75;
+    background: #f5f8fc;
+    line-height: 1.78;
   }
   .hero {
-    background: linear-gradient(135deg, #10243d, #2563eb);
+    background: linear-gradient(135deg, #10243d, #2457d6);
     color: white;
     padding: 72px 24px;
+    border-bottom: 8px solid #93c5fd;
   }
-  .hero-inner, .page {
-    max-width: 1160px;
-    margin: 0 auto;
-  }
+  .hero-inner, .page { max-width: 1180px; margin: 0 auto; }
   .badge {
     display: inline-block;
     padding: 8px 14px;
@@ -43,52 +44,52 @@
     letter-spacing: .5px;
   }
   .hero h1 {
-    max-width: 980px;
-    margin: 20px 0 12px;
+    margin: 18px 0 12px;
     font-size: 44px;
     line-height: 1.1;
+    max-width: 1000px;
   }
   .hero p {
-    max-width: 940px;
+    max-width: 980px;
     color: #dbeafe;
     font-size: 18px;
   }
   .page {
-    padding: 34px 24px 72px;
     background: white;
+    padding: 34px 26px 84px;
   }
-  .box, .toc {
+  h2 { color: var(--navy); margin-top: 34px; }
+  h2.chapter {
+    border-bottom: 3px solid var(--blue);
+    padding-bottom: 10px;
+  }
+  h3 { color: var(--blue); margin-top: 28px; }
+  h4 { color: var(--green); margin-bottom: 8px; }
+  .box {
     border: 1px solid var(--line);
     border-radius: 12px;
     padding: 22px;
-    margin: 24px 0;
+    margin: 22px 0;
     background: white;
   }
-  .info { background: var(--soft); border-left: 5px solid var(--blue); }
-  .story { background: #fff7ed; border-left: 5px solid var(--orange); }
-  .teach { background: #f0fdf4; border-left: 5px solid var(--green); }
-  .warn { background: #fef2f2; border-left: 5px solid var(--red); }
-  .module {
+  .story { background: var(--soft-orange); border-left: 5px solid var(--orange); }
+  .teacher { background: var(--soft-green); border-left: 5px solid var(--green); }
+  .note { background: var(--soft-blue); border-left: 5px solid var(--blue); }
+  .warning { background: var(--soft-red); border-left: 5px solid var(--red); }
+  .module-band {
     background: var(--navy);
     color: white;
+    padding: 25px;
     border-radius: 12px;
-    padding: 24px;
-    margin: 46px 0 24px;
+    margin: 44px 0 24px;
   }
-  .module h2 { margin: 0; font-size: 28px; }
-  .module p { margin: 8px 0 0; color: #dbeafe; }
-  h2.topic {
-    color: var(--navy);
-    border-bottom: 3px solid var(--blue);
-    padding-bottom: 8px;
-    margin-top: 36px;
-  }
-  h3.subtopic { color: var(--blue); margin-top: 26px; }
+  .module-band h2 { color: white; margin: 0; }
+  .module-band p { color: #dbeafe; margin: 8px 0 0; }
   .run-label {
     display: inline-block;
     background: var(--navy);
     color: white;
-    padding: 5px 11px;
+    padding: 6px 12px;
     border-radius: 8px 8px 0 0;
     font: 700 13px Consolas, Monaco, monospace;
   }
@@ -98,11 +99,11 @@
     color: #e5edf7;
     padding: 18px;
     border-radius: 0 12px 12px 12px;
-    overflow: auto;
-    line-height: 1.55;
+    overflow-x: auto;
+    line-height: 1.62;
   }
-  code, .inline-code { font-family: Consolas, Monaco, monospace; }
-  .inline-code {
+  code, .code { font-family: Consolas, Monaco, monospace; }
+  .code {
     background: #eef3f8;
     color: #10243d;
     padding: 2px 6px;
@@ -111,7 +112,7 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    margin: 18px 0;
+    margin: 18px 0 30px;
     font-size: 14px;
   }
   th, td {
@@ -127,13 +128,13 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px;
   }
-  .mini-card {
+  .card {
     border: 1px solid var(--line);
     border-radius: 12px;
-    padding: 18px;
     background: #fbfdff;
+    padding: 18px;
   }
-  .mini-card h3 { color: var(--blue); margin-top: 0; }
+  .card h3 { margin-top: 0; }
   .pill {
     display: inline-block;
     margin: 4px 6px 4px 0;
@@ -143,6 +144,15 @@
     color: #1d4ed8;
     font-weight: 700;
     font-size: 13px;
+  }
+  .diagram {
+    background: #f8fbff;
+    border: 1px dashed #9bb8e8;
+    border-radius: 12px;
+    padding: 18px;
+    font-family: Consolas, Monaco, monospace;
+    white-space: pre-wrap;
+    color: #10243d;
   }
   @media (max-width: 760px) {
     .hero h1 { font-size: 34px; }
@@ -155,110 +165,121 @@
 
 <header class="hero">
   <div class="hero-inner">
-    <span class="badge">Module 8 - Express.js and REST APIs</span>
-    <h1>Express.js and REST APIs - Complete Structured Notes</h1>
-    <p>Simple Hinglish classroom notes to teach Express framework, routing, middleware, REST principles, CRUD APIs, validation, error handling, MVC architecture, and API testing with one practical project.</p>
+    <span class="badge">MERN Stack - Module 8</span>
+    <h1>Express.js and REST APIs - Complete Beginner Friendly Notes</h1>
+    <p>Pure Simple Hinglish classroom notes. Yeh notes assume karte hain ki student ko Express.js zero se start karna hai, but HTML, CSS, JavaScript, Node.js basics, npm, modules, file system, and HTTP module already padha hua hai.</p>
   </div>
 </header>
 
 <main class="page">
-  <section class="toc">
-    <h2>Teaching Flow - Class Mein Kaise Padhana Hai</h2>
-    <ol>
-      <li>Backend ka short recap: browser request bhejta hai, server response deta hai.</li>
-      <li>Express framework ka purpose explain karo: Node.js backend ko easy and clean banana.</li>
-      <li>Routing and middleware ka real-world story explain karo.</li>
-      <li>REST API principles: resources, HTTP methods, status codes, JSON response.</li>
-      <li>CRUD operations: Create, Read, Update, Delete.</li>
-      <li>Validation and error handling: wrong input ko safe response dena.</li>
-      <li>MVC architecture: code ko folders mein clean organize karna.</li>
-      <li>Project 8: Student Course REST API build karna.</li>
-      <li>Postman, Thunder Client, browser, or curl se API testing karna.</li>
-    </ol>
+
+  <section class="box note">
+    <h2>Class Goal - Aaj Hum Kya Seekhenge?</h2>
+    <p>Aaj hum Node.js ke upar Express.js framework use karke REST APIs banana seekhenge. Student ko yeh samajhna hai ki frontend ya browser backend ko request kaise bhejta hai, Express request ko kaise receive karta hai, route kaise decide hota hai, controller logic kaise run hota hai, validation wrong input ko kaise stop karti hai, error handling API ko crash hone se kaise bachati hai, aur Postman se API test kaise karte hain.</p>
+    <p>Class ke end mein hum ek complete <strong>Student Management REST API</strong> banayenge. Is project mein Create Student, Read Student, Update Student, Delete Student, Validation, Error Handling, MVC Structure, Routes, Controllers, Middleware, and Postman Testing sab cover hoga.</p>
+  </section>
+
+  <section class="box">
+    <h2>Index - Topics Flow</h2>
+    <table>
+      <tr><th>No.</th><th>Topic</th><th>Classroom Purpose</th></tr>
+      <tr><td>1</td><td>Express Framework</td><td>Node.js backend ko simple and professional banana</td></tr>
+      <tr><td>2</td><td>Routing</td><td>URL ke according correct code run karna</td></tr>
+      <tr><td>3</td><td>Middleware</td><td>Request ke beech mein checking, logging, parsing karna</td></tr>
+      <tr><td>4</td><td>REST API Principles</td><td>API design ka standard rule samajhna</td></tr>
+      <tr><td>5</td><td>CRUD Operations</td><td>Create, Read, Update, Delete APIs banana</td></tr>
+      <tr><td>6</td><td>Input Validation</td><td>Wrong data ko server par save hone se rokna</td></tr>
+      <tr><td>7</td><td>Error Handling</td><td>Problem aane par proper response dena</td></tr>
+      <tr><td>8</td><td>MVC Architecture</td><td>Large project ko clean folders mein divide karna</td></tr>
+      <tr><td>9</td><td>RESTful API Project</td><td>Student Management API zero se build karna</td></tr>
+    </table>
   </section>
 
   <section class="box story">
-    <h2>Module Story - Express.js Ko Simple Words Mein Samjho</h2>
-    <p>Module 7 mein humne Node.js core HTTP module se server banana seekha. Wahan routing, response headers, JSON conversion, and status codes sab manually likhna padta tha. Real projects mein agar har route ke liye itna manual code likhenge toh code long, repetitive, and confusing ho jayega.</p>
-    <p>Express.js ek framework hai jo Node.js backend ko simple, fast, and organized banata hai. Simple story: Node.js raw kitchen hai jahan sab tools alag-alag pade hain. Express.js ek ready kitchen setup hai jahan stove, plates, shelves, and workflow already organized hain. Developer ko bas route banana hai, request handle karni hai, and response bhejna hai.</p>
-    <p>Is module mein hum ek <strong>Student Course REST API</strong> banayenge. Is API se hum courses add karenge, courses list dekhenge, single course search karenge, course update karenge, course delete karenge, validation lagayenge, error handle karenge, and MVC style folder structure samjhenge.</p>
+    <h2>Backend Story - Express Start Karne Se Pehle</h2>
+    <p>Socho ek college office hai. Student office counter par jaata hai aur bolta hai: “Mujhe apna record dekhna hai.” Counter person student ID leta hai, register ya computer mein data check karta hai, aur student ko response deta hai. Web app mein browser ya frontend student ki tarah request bhejta hai. Backend server office counter ki tarah request receive karta hai, data process karta hai, aur response bhejta hai.</p>
+    <p>Node.js se hum server bana sakte hain, lekin raw Node.js HTTP module mein har route, header, JSON response, and error manually handle karna padta hai. Express.js is problem ko solve karta hai. Express humare backend ko clean, short, readable, and scalable banata hai.</p>
   </section>
 
-  <section class="module">
-    <h2>Part 1 - Setup and Installation</h2>
-    <p>Goal: Express project create karna and first server run karna.</p>
+  <section class="module-band">
+    <h2>1. Express Framework</h2>
+    <p>Express.js kya hai, need kyu padi, Node.js mein iska use kyu hota hai.</p>
   </section>
 
-  <h2 class="topic">1. Prerequisite Check</h2>
-  <p>Express.js use karne se pehle Node.js and npm install hona chahiye. Node.js JavaScript ko browser ke bahar server par run karne deta hai. npm packages install karne ka tool hai.</p>
+  <h2 class="chapter">1.1 Introduction</h2>
+  <h3>Ye Kya Hai?</h3>
+  <p>Express.js Node.js ka web framework hai. Framework ka simple meaning hai ready-made structure and tools. Node.js JavaScript ko server side par run karta hai. Express.js us Node.js ke upar ek easy layer provide karta hai jisse backend routes, APIs, middleware, request body, and responses manage karna simple ho jata hai.</p>
 
-  <span class="run-label">Terminal</span>
-  <pre><code>node -v
-npm -v</code></pre>
+  <h3>Iski Need Kyu Padi?</h3>
+  <p>Node.js ke HTTP module se server banana possible hai, but code long ho jata hai. Example: URL check karna, status code set karna, content type set karna, JSON convert karna, wrong route handle karna, sab manually likhna padta hai. Express ye repetitive kaam easy syntax mein kar deta hai.</p>
+
+  <h3>Ye Kis Problem Ko Solve Karta Hai?</h3>
+  <ul>
+    <li>Manual routing ka problem solve karta hai.</li>
+    <li>Request body ko easily read karne mein help karta hai.</li>
+    <li>Middleware system provide karta hai.</li>
+    <li>Error handling ko organized banata hai.</li>
+    <li>Large backend project ko scalable banata hai.</li>
+  </ul>
+
+  <h3>Node.js Mein Express Ki Zarurat Kyu Padti Hai?</h3>
+  <p>Node.js engine hai. Express driving system hai. Engine powerful hota hai, but driving system ke bina car chalana difficult hoga. Waise hi Node.js powerful hai, but Express ke bina real APIs banana lengthy ho sakta hai.</p>
+
+  <h3>Real World Mein Kahan Use Hota Hai?</h3>
+  <p>Express.js login systems, dashboards, admin panels, e-commerce APIs, student portals, payment APIs, booking systems, chat apps, and mobile app backends mein use hota hai.</p>
+
+  <h3>Companies Kahan Use Karti Hain?</h3>
+  <p>Companies Express ya Express-like backend framework ka use APIs banane ke liye karti hain. Jab frontend React app ko data chahiye hota hai, woh Express backend API ko request bhej sakta hai. Mobile apps bhi Express API se data le sakti hain.</p>
+
+  <section class="box teacher">
+    <h3>Real-Life Example</h3>
+    <p>Restaurant mein customer order deta hai. Waiter order receive karta hai. Kitchen food prepare karta hai. Waiter food customer ko return karta hai. Web app mein browser request deta hai. Express route request receive karta hai. Controller logic process karta hai. Response browser ko return hota hai.</p>
+  </section>
+
+  <h2 class="chapter">1.2 Theory - Express Background Mein Kaise Work Karta Hai?</h2>
+  <p>Jab browser ya API testing tool request bhejta hai, request pehle Express app tak aati hai. Express app middleware run karta hai. Middleware request ko check/modify kar sakta hai. Uske baad Express route match karta hai. Route controller function call karta hai. Controller response create karta hai. Express response client ko bhej deta hai.</p>
+
+  <div class="diagram">Browser / Frontend
+        ↓ request
+Express App
+        ↓ middleware
+Route Match
+        ↓ controller function
+Business Logic / Data
+        ↓ response object
+Browser / Frontend</div>
 
   <table>
-    <tr><th>Command</th><th>Simple Explanation</th><th>Expected Output</th></tr>
-    <tr><td><span class="inline-code">node -v</span></td><td>Node.js version check karta hai. Version aaya toh Node installed hai.</td><td>Example: <span class="inline-code">v22.11.0</span></td></tr>
-    <tr><td><span class="inline-code">npm -v</span></td><td>npm version check karta hai. npm se Express install hoga.</td><td>Example: <span class="inline-code">10.9.0</span></td></tr>
+    <tr><th>Step</th><th>Explanation</th></tr>
+    <tr><td>Browser</td><td>User ya frontend request send karta hai. Example: GET /api/students.</td></tr>
+    <tr><td>Express App</td><td>Express request receive karta hai.</td></tr>
+    <tr><td>Middleware</td><td>Request body parse, logging, auth, validation jaise checks ho sakte hain.</td></tr>
+    <tr><td>Route</td><td>Express check karta hai request URL and method kis route se match ho raha hai.</td></tr>
+    <tr><td>Controller</td><td>Actual logic run hota hai. Data read/create/update/delete hota hai.</td></tr>
+    <tr><td>Response</td><td>Server JSON/text/status code ke saath answer bhejta hai.</td></tr>
   </table>
 
-  <h2 class="topic">2. Project Folder Create Karo</h2>
-  <p>Backend project ko clean folder mein banana best practice hai. Isse code, package files, routes, controllers, and middleware organized rahte hain.</p>
+  <h2 class="chapter">1.3 Practical - First Express Server</h2>
+  <p>Ab zero se first Express server banate hain.</p>
 
+  <h3>Folder and Commands</h3>
   <span class="run-label">Terminal</span>
-  <pre><code>mkdir express-rest-api-project
-cd express-rest-api-project
+  <pre><code>mkdir express-first-server
+cd express-first-server
 npm init -y
 npm install express</code></pre>
 
   <table>
-    <tr><th>Line / Command</th><th>Detailed Simple Hinglish Explanation</th></tr>
-    <tr><td><span class="inline-code">mkdir express-rest-api-project</span></td><td>New folder create karta hai. Is folder ko project ka ghar samjho. Saara Express API code isi ghar ke andar rahega.</td></tr>
-    <tr><td><span class="inline-code">cd express-rest-api-project</span></td><td>Terminal ko project folder ke andar le jata hai. Ab jo commands chalengi, woh isi folder mein effect karengi.</td></tr>
-    <tr><td><span class="inline-code">npm init -y</span></td><td><span class="inline-code">package.json</span> file create karta hai. Yeh file project ka ID card hai jisme project name, version, scripts, and dependencies mention hoti hain.</td></tr>
-    <tr><td><span class="inline-code">npm install express</span></td><td>Express package install karta hai. Iske baad <span class="inline-code">node_modules</span> folder and <span class="inline-code">package-lock.json</span> file create hoti hai.</td></tr>
+    <tr><th>Command</th><th>Explanation</th><th>Expected Result</th></tr>
+    <tr><td><span class="code">mkdir express-first-server</span></td><td>New project folder create karta hai.</td><td>Folder create ho jayega.</td></tr>
+    <tr><td><span class="code">cd express-first-server</span></td><td>Terminal ko folder ke andar le jata hai.</td><td>Current path change ho jayega.</td></tr>
+    <tr><td><span class="code">npm init -y</span></td><td>Default package.json create karta hai.</td><td>package.json file banegi.</td></tr>
+    <tr><td><span class="code">npm install express</span></td><td>Express package install karta hai.</td><td>node_modules and package-lock.json banenge.</td></tr>
   </table>
 
-  <section class="box info">
-    <strong>Class Output:</strong> VS Code Explorer mein <span class="inline-code">package.json</span>, <span class="inline-code">package-lock.json</span>, and <span class="inline-code">node_modules</span> dikhna chahiye. Learners ko batao ki <span class="inline-code">node_modules</span> manually edit nahi karna hota.
-  </section>
+  <h3>File Banao</h3>
+  <p>Project folder mein <span class="code">server.js</span> file banao.</p>
 
-  <h2 class="topic">3. package.json Script Setup</h2>
-  <p>Node file run karne ke liye hum direct <span class="inline-code">node server.js</span> use kar sakte hain. Lekin professional project mein npm script use karna cleaner hota hai.</p>
-
-  <span class="run-label">package.json</span>
-  <pre><code>{
-  "scripts": {
-    "start": "node server.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2"
-  }
-}</code></pre>
-
-  <table>
-    <tr><th>Code Part</th><th>Explanation</th></tr>
-    <tr><td><span class="inline-code">"scripts"</span></td><td>Yahan project commands define karte hain. Isse long commands yaad nahi rakhni padti.</td></tr>
-    <tr><td><span class="inline-code">"start": "node server.js"</span></td><td>Jab hum <span class="inline-code">npm start</span> run karenge, internally <span class="inline-code">node server.js</span> chalega.</td></tr>
-    <tr><td><span class="inline-code">"dependencies"</span></td><td>Project ko chalne ke liye jo packages chahiye, woh yahan list hote hain.</td></tr>
-    <tr><td><span class="inline-code">"express"</span></td><td>Express framework dependency hai. Version number project ko batata hai kaunsa Express install hua.</td></tr>
-  </table>
-
-  <section class="module">
-    <h2>Part 2 - Topic Explanations</h2>
-    <p>Goal: Har topic ko individually samjho, phir project mein apply karo.</p>
-  </section>
-
-  <h2 class="topic">4. Express Framework</h2>
-  <p>Express.js Node.js ke upar built framework hai. Framework ka matlab ready structure and helper tools. Express routing easy karta hai, middleware support deta hai, JSON parsing simple karta hai, error handling organized banata hai, and APIs quickly build karne mein help karta hai.</p>
-  <p>Node.js core HTTP module mein manually request URL check karna padta hai. Express mein hum direct <span class="inline-code">app.get()</span>, <span class="inline-code">app.post()</span>, <span class="inline-code">app.put()</span>, and <span class="inline-code">app.delete()</span> use karte hain.</p>
-
-  <section class="box teach">
-    <h3>Class Mein Aise Explain Karo</h3>
-    <p>“Node.js raw engine hai. Express.js us engine par bana hua easy driving system hai. Aapko har internal wire manually connect nahi karni padti. Express route, request, response, middleware sabko simple syntax mein handle kar deta hai.”</p>
-  </section>
-
-  <h3 class="subtopic">First Express Server</h3>
   <span class="run-label">server.js</span>
   <pre><code>const express = require("express");
 
@@ -266,320 +287,598 @@ const app = express();
 const PORT = 3000;
 
 app.get("/", function (request, response) {
-  response.send("Welcome to Express API");
+  response.send("Welcome to Express.js");
 });
 
 app.listen(PORT, function () {
   console.log("Server running on http://localhost:" + PORT);
 });</code></pre>
 
-  <span class="run-label">Run</span>
-  <pre><code>npm start</code></pre>
+  <h3>Run Command</h3>
+  <span class="run-label">Terminal</span>
+  <pre><code>node server.js</code></pre>
 
-  <table>
-    <tr><th>Line / Code</th><th>Detailed Simple Hinglish Explanation</th></tr>
-    <tr><td><span class="inline-code">const express = require("express");</span></td><td>Express package ko import karta hai. Is line ke bina Express ka use nahi kar sakte. <span class="inline-code">require</span> Node.js ka CommonJS import system hai.</td></tr>
-    <tr><td><span class="inline-code">const app = express();</span></td><td>Express application object create karta hai. Yeh <span class="inline-code">app</span> poore backend ka main controller ban jata hai.</td></tr>
-    <tr><td><span class="inline-code">const PORT = 3000;</span></td><td>Server ka port number set karta hai. Browser <span class="inline-code">localhost:3000</span> par request bhejega.</td></tr>
-    <tr><td><span class="inline-code">app.get("/", ...)</span></td><td>GET route create karta hai. Jab user home URL open karega, yeh function run hoga.</td></tr>
-    <tr><td><span class="inline-code">request</span></td><td>Client/browser ki request information rakhta hai, jaise params, query, body, headers.</td></tr>
-    <tr><td><span class="inline-code">response</span></td><td>Client/browser ko answer bhejne ke liye use hota hai.</td></tr>
-    <tr><td><span class="inline-code">response.send(...)</span></td><td>Text/HTML response bhejta hai and request complete karta hai.</td></tr>
-    <tr><td><span class="inline-code">app.listen(PORT, ...)</span></td><td>Server ko start karta hai. Iske baad API requests listen kar sakti hai.</td></tr>
-  </table>
+  <h3>Expected Output</h3>
+  <span class="run-label">Terminal Output</span>
+  <pre><code>Server running on http://localhost:3000</code></pre>
+  <p>Browser mein open karo: <span class="code">http://localhost:3000</span>. Output dikhega: <span class="code">Welcome to Express.js</span>.</p>
 
-  <section class="box info">
-    <strong>Expected Output:</strong> Browser mein <span class="inline-code">http://localhost:3000</span> open karo. Page par <span class="inline-code">Welcome to Express API</span> dikhega.
-  </section>
-
-  <h2 class="topic">5. Routing and Middleware</h2>
-  <p>Routing ka matlab URL ke according kaunsa code run hoga. Example: <span class="inline-code">/api/courses</span> course list dega, <span class="inline-code">/api/courses/1</span> single course dega. Middleware ka matlab request aur final response ke beech ka checkpoint.</p>
-  <p>Real-world story: College gate par security guard middleware hai. Student andar jaane se pehle ID check hoti hai. Agar ID valid hai toh class tak jaane dete hain. Backend mein middleware logging, authentication, validation, JSON parsing, and error handling ke liye use hota hai.</p>
-
-  <h3 class="subtopic">Middleware Example</h3>
-  <span class="run-label">server.js</span>
-  <pre><code>app.use(express.json());
-
-app.use(function (request, response, next) {
-  console.log(request.method + " " + request.url);
-  next();
-});</code></pre>
-
+  <h2 class="chapter">1.4 Code Explanation - Har Line Detail Mein</h2>
   <table>
     <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">app.use(express.json());</span></td><td>Built-in middleware hai. Client se JSON body aaye toh usko JavaScript object mein convert karta hai. POST/PUT requests ke liye bahut important hai.</td></tr>
-    <tr><td><span class="inline-code">app.use(function (...))</span></td><td>Custom middleware create karta hai. Yeh har request par route se pehle run hoga.</td></tr>
-    <tr><td><span class="inline-code">request.method</span></td><td>Request ka method show karta hai, jaise GET, POST, PUT, DELETE.</td></tr>
-    <tr><td><span class="inline-code">request.url</span></td><td>Requested route/path show karta hai.</td></tr>
-    <tr><td><span class="inline-code">next();</span></td><td>Request ko next middleware ya actual route tak bhejta hai. Agar <span class="inline-code">next()</span> nahi likhenge toh request wahi ruk jayegi.</td></tr>
+    <tr><td><span class="code">const express = require("express");</span></td><td><span class="code">const</span> ek variable declare karta hai jiska value reassign nahi karenge. <span class="code">require</span> Node.js ka import function hai. <span class="code">"express"</span> package ka name hai. <span class="code">express</span> variable ke andar Express framework ka function store ho raha hai. Ye line na likhenge toh Express app create nahi hoga.</td></tr>
+    <tr><td>Blank line</td><td>Blank line code ko readable banati hai. Program par koi effect nahi hota.</td></tr>
+    <tr><td><span class="code">const app = express();</span></td><td><span class="code">app</span> Express application object hai. <span class="code">express()</span> call karne se main Express app create hota hai. Routes, middleware, and listen sab isi <span class="code">app</span> par attach honge. Ye line na ho toh <span class="code">app.get</span> ya <span class="code">app.listen</span> use nahi kar sakte.</td></tr>
+    <tr><td><span class="code">const PORT = 3000;</span></td><td><span class="code">PORT</span> server ka address number hai. Browser is port par server se connect karega. 3000 development projects mein common port hai.</td></tr>
+    <tr><td><span class="code">app.get("/", function (...))</span></td><td>GET route create karta hai. <span class="code">"/"</span> home URL hai. Jab browser home route hit karega, andar wala function run hoga.</td></tr>
+    <tr><td><span class="code">request</span></td><td>Client se aayi request ka data rakhta hai. Isme URL, headers, params, query, body jaise data mil sakte hain.</td></tr>
+    <tr><td><span class="code">response</span></td><td>Client ko answer bhejne ke liye use hota hai.</td></tr>
+    <tr><td><span class="code">response.send("Welcome to Express.js");</span></td><td>Browser ko text response bhejta hai. <span class="code">send</span> response complete bhi kar deta hai.</td></tr>
+    <tr><td><span class="code">});</span></td><td>Route function and <span class="code">app.get</span> call close karta hai. Brackets proper close karna bahut important hai.</td></tr>
+    <tr><td><span class="code">app.listen(PORT, function () {...})</span></td><td>Server ko given port par start karta hai. Server start hone ke baad callback function run hota hai.</td></tr>
+    <tr><td><span class="code">console.log(...)</span></td><td>Terminal mein message print karta hai, taaki developer ko pata chale server start ho gaya.</td></tr>
   </table>
 
-  <h2 class="topic">6. REST API Principles</h2>
-  <p>REST API ek standard style hai jisme client and server HTTP methods ke through communicate karte hain. REST mein data ko resource ke roop mein treat kiya jata hai. Example: <span class="inline-code">courses</span> ek resource hai, <span class="inline-code">students</span> ek resource hai.</p>
+  <h2 class="chapter">1.5 Common Errors</h2>
+  <table>
+    <tr><th>Error</th><th>Reason</th><th>Solution</th></tr>
+    <tr><td>Cannot find module 'express'</td><td>Express install nahi hua.</td><td><span class="code">npm install express</span> run karo.</td></tr>
+    <tr><td>app is not defined</td><td><span class="code">const app = express();</span> missing hai.</td><td>App create wali line add karo.</td></tr>
+    <tr><td>Port already in use</td><td>Port 3000 par already koi server chal raha hai.</td><td>Old server stop karo ya PORT 4000 use karo.</td></tr>
+  </table>
+
+  <h2 class="chapter">1.6 Interview Tips</h2>
+  <table>
+    <tr><th>Question</th><th>Simple Answer</th></tr>
+    <tr><td>Express.js kya hai?</td><td>Express.js Node.js ka web framework hai jo APIs and web servers easy banata hai.</td></tr>
+    <tr><td>Express kyun use karte hain?</td><td>Routing, middleware, JSON response, and error handling ko simple banane ke liye.</td></tr>
+    <tr><td>Express aur Node.js same hain?</td><td>Nahi. Node.js runtime hai. Express Node.js ke upar framework hai.</td></tr>
+  </table>
+
+  <section class="module-band">
+    <h2>2. Routing</h2>
+    <p>Routing ka matlab hai URL ke according backend ka correct function run karna.</p>
+  </section>
+
+  <h2 class="chapter">2.1 Introduction</h2>
+  <p>Routing web application ka traffic system hai. Browser server ko URL bhejta hai. Express check karta hai ki yeh URL kis route se match ho raha hai. Match milne par us route ka function run hota hai.</p>
+
+  <h3>Need Kyu Padi?</h3>
+  <p>Ek backend mein multiple pages ya APIs hoti hain. Example: home, login, students, courses, products. Har URL par same response nahi dena. Routing hume URL wise different response dene mein help karti hai.</p>
+
+  <h3>Real-Life Example</h3>
+  <p>Hospital mein reception, billing, pharmacy, doctor room alag-alag counters hote hain. Patient jis counter par jata hai, uske according kaam hota hai. Express routing bhi URL ke according correct handler tak request bhejti hai.</p>
+
+  <h2 class="chapter">2.2 Theory Flow</h2>
+  <div class="diagram">Browser: GET /about
+        ↓
+Express App
+        ↓
+Route Table Check
+        ↓
+Matched Route: app.get("/about")
+        ↓
+Route Function Runs
+        ↓
+Response Sent</div>
+
+  <h2 class="chapter">2.3 Practical - Multiple Routes</h2>
+  <span class="run-label">server.js</span>
+  <pre><code>const express = require("express");
+
+const app = express();
+const PORT = 3000;
+
+app.get("/", function (request, response) {
+  response.send("Home Page");
+});
+
+app.get("/about", function (request, response) {
+  response.send("About Page");
+});
+
+app.get("/contact", function (request, response) {
+  response.send("Contact Page");
+});
+
+app.listen(PORT, function () {
+  console.log("Server running on http://localhost:" + PORT);
+});</code></pre>
+
+  <h3>Run</h3>
+  <span class="run-label">Terminal</span>
+  <pre><code>node server.js</code></pre>
+
+  <h3>Expected Results</h3>
+  <table>
+    <tr><th>URL</th><th>Output</th></tr>
+    <tr><td><span class="code">http://localhost:3000/</span></td><td>Home Page</td></tr>
+    <tr><td><span class="code">http://localhost:3000/about</span></td><td>About Page</td></tr>
+    <tr><td><span class="code">http://localhost:3000/contact</span></td><td>Contact Page</td></tr>
+  </table>
+
+  <h2 class="chapter">2.4 Code Explanation</h2>
+  <table>
+    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
+    <tr><td><span class="code">app.get("/", ...)</span></td><td>Home route create karta hai. Slash root/home URL ko represent karta hai.</td></tr>
+    <tr><td><span class="code">app.get("/about", ...)</span></td><td>About route create karta hai. Browser /about hit karega toh yeh route chalega.</td></tr>
+    <tr><td><span class="code">app.get("/contact", ...)</span></td><td>Contact route create karta hai.</td></tr>
+    <tr><td><span class="code">response.send(...)</span></td><td>Har route apna different response send kar raha hai.</td></tr>
+  </table>
+
+  <h2 class="chapter">2.5 Common Errors</h2>
+  <table>
+    <tr><th>Error</th><th>Reason</th><th>Solution</th></tr>
+    <tr><td>Cannot GET /about</td><td>/about route define nahi hai ya spelling wrong hai.</td><td>Route spelling check karo.</td></tr>
+    <tr><td>Server response nahi de raha</td><td>Server run nahi hai.</td><td><span class="code">node server.js</span> run karo.</td></tr>
+  </table>
+
+  <h2 class="chapter">2.6 Interview Tips</h2>
+  <table>
+    <tr><th>Question</th><th>Answer</th></tr>
+    <tr><td>Routing kya hoti hai?</td><td>URL and HTTP method ke according correct function run karna routing hai.</td></tr>
+    <tr><td>app.get ka use kya hai?</td><td>GET request handle karne ke liye.</td></tr>
+  </table>
+
+  <section class="module-band">
+    <h2>3. Middleware</h2>
+    <p>Request route tak pahunchne se pehle jo function run hota hai.</p>
+  </section>
+
+  <h2 class="chapter">3.1 Introduction</h2>
+  <p>Middleware Express ka bahut important concept hai. Middleware ek function hota hai jo request aur response ke beech mein run hota hai. Ye request ko check kar sakta hai, log kar sakta hai, body parse kar sakta hai, authentication kar sakta hai, ya error handle kar sakta hai.</p>
+
+  <h3>Need Kyu Padi?</h3>
+  <p>Har route mein same code repeat karna bad practice hai. Example: har route mein request log karna hai, ya JSON body parse karni hai, ya user login check karna hai. Middleware common work ko ek jagah handle karta hai.</p>
+
+  <h2 class="chapter">3.2 Theory Flow</h2>
+  <div class="diagram">Request
+  ↓
+Middleware 1: JSON body parse
+  ↓
+Middleware 2: Request log
+  ↓
+Route Handler
+  ↓
+Response</div>
+
+  <h3>Middleware Function Format</h3>
+  <span class="run-label">Syntax</span>
+  <pre><code>function middlewareName(request, response, next) {
+  // work here
+  next();
+}</code></pre>
 
   <table>
-    <tr><th>HTTP Method</th><th>Purpose</th><th>Example Route</th><th>Meaning</th></tr>
-    <tr><td>GET</td><td>Data read karna</td><td><span class="inline-code">GET /api/courses</span></td><td>Saare courses list karo.</td></tr>
-    <tr><td>GET</td><td>Single data read karna</td><td><span class="inline-code">GET /api/courses/1</span></td><td>ID 1 wala course dikhana.</td></tr>
-    <tr><td>POST</td><td>New data create karna</td><td><span class="inline-code">POST /api/courses</span></td><td>New course add karna.</td></tr>
-    <tr><td>PUT</td><td>Existing data update karna</td><td><span class="inline-code">PUT /api/courses/1</span></td><td>ID 1 course update karna.</td></tr>
-    <tr><td>DELETE</td><td>Data delete karna</td><td><span class="inline-code">DELETE /api/courses/1</span></td><td>ID 1 course delete karna.</td></tr>
+    <tr><th>Part</th><th>Explanation</th></tr>
+    <tr><td><span class="code">request</span></td><td>Client se aayi request information.</td></tr>
+    <tr><td><span class="code">response</span></td><td>Client ko response bhejne ka object.</td></tr>
+    <tr><td><span class="code">next</span></td><td>Request ko next middleware ya route tak bhejne ka function.</td></tr>
   </table>
 
-  <h3 class="subtopic">Important Status Codes</h3>
+  <h2 class="chapter">3.3 Practical - Logger Middleware</h2>
+  <span class="run-label">server.js</span>
+  <pre><code>const express = require("express");
+
+const app = express();
+const PORT = 3000;
+
+app.use(function (request, response, next) {
+  console.log(request.method + " request on " + request.url);
+  next();
+});
+
+app.get("/", function (request, response) {
+  response.send("Middleware example running");
+});
+
+app.listen(PORT, function () {
+  console.log("Server running on http://localhost:" + PORT);
+});</code></pre>
+
+  <h3>Expected Output</h3>
+  <p>Browser mein <span class="code">http://localhost:3000</span> open karne par page output: <span class="code">Middleware example running</span>. Terminal mein output: <span class="code">GET request on /</span>.</p>
+
+  <h2 class="chapter">3.4 Code Explanation</h2>
   <table>
-    <tr><th>Status Code</th><th>Meaning</th><th>Use Case</th></tr>
-    <tr><td>200</td><td>OK</td><td>Request successful, data returned.</td></tr>
-    <tr><td>201</td><td>Created</td><td>New resource create ho gaya.</td></tr>
-    <tr><td>400</td><td>Bad Request</td><td>User ne wrong/incomplete input bheja.</td></tr>
-    <tr><td>404</td><td>Not Found</td><td>Requested data ya route nahi mila.</td></tr>
-    <tr><td>500</td><td>Server Error</td><td>Backend mein unexpected error aa gaya.</td></tr>
+    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
+    <tr><td><span class="code">app.use(function (...))</span></td><td>Middleware register karta hai. Ye har request par run hoga.</td></tr>
+    <tr><td><span class="code">request.method</span></td><td>GET, POST, PUT, DELETE method show karta hai.</td></tr>
+    <tr><td><span class="code">request.url</span></td><td>Requested URL path show karta hai.</td></tr>
+    <tr><td><span class="code">console.log(...)</span></td><td>Terminal mein log print karta hai.</td></tr>
+    <tr><td><span class="code">next()</span></td><td>Request ko aage route tak bhejta hai. Agar next nahi likha toh request ruk jayegi.</td></tr>
   </table>
 
-  <h2 class="topic">7. CRUD Operations</h2>
-  <p>CRUD ka full form hai Create, Read, Update, Delete. Almost har real application CRUD use karti hai. Student app mein student add/read/update/delete. E-commerce app mein product add/read/update/delete. Course API mein course add/read/update/delete.</p>
+  <h2 class="chapter">3.5 Common Errors</h2>
+  <table>
+    <tr><th>Error</th><th>Reason</th><th>Solution</th></tr>
+    <tr><td>Page loading stuck</td><td>Middleware mein <span class="code">next()</span> missing hai.</td><td><span class="code">next()</span> add karo.</td></tr>
+    <tr><td>request.body undefined</td><td><span class="code">express.json()</span> middleware missing hai.</td><td><span class="code">app.use(express.json())</span> add karo.</td></tr>
+  </table>
 
-  <div class="grid">
-    <div class="mini-card">
-      <h3>Create</h3>
-      <p>New data add karna. Method: <span class="inline-code">POST</span>.</p>
-    </div>
-    <div class="mini-card">
-      <h3>Read</h3>
-      <p>Data dekhna/list karna. Method: <span class="inline-code">GET</span>.</p>
-    </div>
-    <div class="mini-card">
-      <h3>Update</h3>
-      <p>Existing data change karna. Method: <span class="inline-code">PUT</span> or <span class="inline-code">PATCH</span>.</p>
-    </div>
-    <div class="mini-card">
-      <h3>Delete</h3>
-      <p>Data remove karna. Method: <span class="inline-code">DELETE</span>.</p>
-    </div>
-  </div>
+  <h2 class="chapter">3.6 Interview Tips</h2>
+  <table>
+    <tr><th>Question</th><th>Answer</th></tr>
+    <tr><td>Middleware kya hai?</td><td>Request and response ke beech mein run hone wala function middleware hai.</td></tr>
+    <tr><td>next() ka use kya hai?</td><td>Request ko next middleware ya route handler tak bhejne ke liye.</td></tr>
+  </table>
 
-  <h2 class="topic">8. Input Validation</h2>
-  <p>Input validation ka matlab user se aaye data ko check karna. Agar user blank title bhej de, invalid duration bhej de, ya wrong data type bhej de, toh backend ko safe response dena chahiye. Validation ke bina dirty data database mein save ho sakta hai.</p>
+  <section class="module-band">
+    <h2>4. REST API Principles</h2>
+    <p>API design ke standard rules.</p>
+  </section>
 
-  <span class="run-label">Validation Function</span>
-  <pre><code>function validateCourse(input) {
-  if (!input.title || input.title.trim().length < 3) {
-    return "Title must be at least 3 characters long";
+  <h2 class="chapter">4.1 Introduction</h2>
+  <p>REST API ek standard way hai jisme client and server HTTP methods ke through communicate karte hain. REST mein data ko resource maana jata hai. Example: students, courses, products, orders. Har resource ka route hota hai.</p>
+
+  <h3>Need Kyu Padi?</h3>
+  <p>Agar har developer apne hisaab se API route banaye toh confusion hoga. REST ek common pattern deta hai jisse frontend, backend, mobile app, and other services easily samajh sakte hain.</p>
+
+  <h2 class="chapter">4.2 Theory - REST Flow</h2>
+  <div class="diagram">Client wants students list
+  ↓
+GET /api/students
+  ↓
+Express route runs
+  ↓
+Controller reads students
+  ↓
+JSON response returns</div>
+
+  <table>
+    <tr><th>HTTP Method</th><th>Use</th><th>Route</th><th>Meaning</th></tr>
+    <tr><td>GET</td><td>Read data</td><td><span class="code">GET /api/students</span></td><td>All students list karo.</td></tr>
+    <tr><td>GET</td><td>Read single data</td><td><span class="code">GET /api/students/1</span></td><td>ID 1 student show karo.</td></tr>
+    <tr><td>POST</td><td>Create data</td><td><span class="code">POST /api/students</span></td><td>New student add karo.</td></tr>
+    <tr><td>PUT</td><td>Update data</td><td><span class="code">PUT /api/students/1</span></td><td>ID 1 student update karo.</td></tr>
+    <tr><td>DELETE</td><td>Delete data</td><td><span class="code">DELETE /api/students/1</span></td><td>ID 1 student delete karo.</td></tr>
+  </table>
+
+  <h3>Status Codes</h3>
+  <table>
+    <tr><th>Status</th><th>Meaning</th><th>When To Use</th></tr>
+    <tr><td>200</td><td>OK</td><td>Data successfully returned or updated.</td></tr>
+    <tr><td>201</td><td>Created</td><td>New data create ho gaya.</td></tr>
+    <tr><td>400</td><td>Bad Request</td><td>User input wrong hai.</td></tr>
+    <tr><td>404</td><td>Not Found</td><td>Data ya route nahi mila.</td></tr>
+    <tr><td>500</td><td>Server Error</td><td>Backend mein unexpected problem.</td></tr>
+  </table>
+
+  <h2 class="chapter">4.3 Practical - JSON API Route</h2>
+  <span class="run-label">server.js</span>
+  <pre><code>app.get("/api/students", function (request, response) {
+  response.status(200).json({
+    success: true,
+    data: ["Rahul", "Priya", "Aman"]
+  });
+});</code></pre>
+
+  <h3>Expected Output</h3>
+  <span class="run-label">Browser / Postman</span>
+  <pre><code>{
+  "success": true,
+  "data": ["Rahul", "Priya", "Aman"]
+}</code></pre>
+
+  <h2 class="chapter">4.4 Code Explanation</h2>
+  <table>
+    <tr><th>Line / Code</th><th>Explanation</th></tr>
+    <tr><td><span class="code">app.get("/api/students", ...)</span></td><td>Students list read karne ke liye GET route banata hai.</td></tr>
+    <tr><td><span class="code">response.status(200)</span></td><td>Response ka status OK set karta hai.</td></tr>
+    <tr><td><span class="code">.json({...})</span></td><td>Response JSON format mein bhejta hai.</td></tr>
+    <tr><td><span class="code">success: true</span></td><td>Client ko batata hai request successful hai.</td></tr>
+    <tr><td><span class="code">data</span></td><td>Actual students data send karta hai.</td></tr>
+  </table>
+
+  <h2 class="chapter">4.5 Interview Tips</h2>
+  <table>
+    <tr><th>Question</th><th>Answer</th></tr>
+    <tr><td>REST API kya hai?</td><td>REST API ek standard way hai jisme resources ko HTTP methods se access karte hain.</td></tr>
+    <tr><td>JSON response kyun use karte hain?</td><td>Frontend and mobile apps JSON easily read kar sakte hain.</td></tr>
+  </table>
+
+  <section class="module-band">
+    <h2>5. CRUD Operations</h2>
+    <p>Create, Read, Update, Delete ka complete concept.</p>
+  </section>
+
+  <h2 class="chapter">5.1 Introduction</h2>
+  <p>CRUD ka full form hai Create, Read, Update, Delete. Most apps CRUD par based hoti hain. Student app mein student add, show, update, delete hota hai. Product app mein product add, show, update, delete hota hai.</p>
+
+  <table>
+    <tr><th>CRUD</th><th>HTTP Method</th><th>Example</th></tr>
+    <tr><td>Create</td><td>POST</td><td>New student add karna.</td></tr>
+    <tr><td>Read</td><td>GET</td><td>Students list dekhna.</td></tr>
+    <tr><td>Update</td><td>PUT</td><td>Student marks update karna.</td></tr>
+    <tr><td>Delete</td><td>DELETE</td><td>Student remove karna.</td></tr>
+  </table>
+
+  <h2 class="chapter">5.2 Practical - CRUD Route Names</h2>
+  <span class="run-label">Routes Plan</span>
+  <pre><code>GET    /api/students
+GET    /api/students/:id
+POST   /api/students
+PUT    /api/students/:id
+DELETE /api/students/:id</code></pre>
+
+  <h2 class="chapter">5.3 Interview Tips</h2>
+  <table>
+    <tr><th>Question</th><th>Answer</th></tr>
+    <tr><td>CRUD kya hai?</td><td>Create, Read, Update, Delete operations.</td></tr>
+    <tr><td>POST and PUT mein difference?</td><td>POST new data create karta hai. PUT existing data update karta hai.</td></tr>
+  </table>
+
+  <section class="module-band">
+    <h2>6. Input Validation</h2>
+    <p>Wrong input ko API mein enter hone se rokna.</p>
+  </section>
+
+  <h2 class="chapter">6.1 Introduction</h2>
+  <p>Input validation ka matlab hai user se aaye data ko check karna. Agar student name blank hai, age number nahi hai, email missing hai, toh API ko data save nahi karna chahiye. API ko clear error message dena chahiye.</p>
+
+  <h3>Need Kyu Padi?</h3>
+  <p>Without validation dirty data save ho sakta hai. Example: student name empty, email wrong, age negative. Later reports and frontend break ho sakte hain.</p>
+
+  <h2 class="chapter">6.2 Practical - Student Validation</h2>
+  <span class="run-label">validator function</span>
+  <pre><code>function validateStudent(input) {
+  if (!input.name || input.name.trim().length < 3) {
+    return "Name must be at least 3 characters";
   }
 
-  if (!input.duration || input.duration.trim() === "") {
-    return "Duration is required";
+  if (!input.email || !input.email.includes("@")) {
+    return "Valid email is required";
+  }
+
+  if (!input.course || input.course.trim() === "") {
+    return "Course is required";
   }
 
   return null;
 }</code></pre>
 
+  <h2 class="chapter">6.3 Code Explanation</h2>
   <table>
-    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">function validateCourse(input)</span></td><td>Reusable validation function. Har POST/PUT request mein input check karne ke liye use hoga.</td></tr>
-    <tr><td><span class="inline-code">!input.title</span></td><td>Check karta hai title missing hai ya nahi.</td></tr>
-    <tr><td><span class="inline-code">input.title.trim()</span></td><td>Extra spaces remove karta hai. Agar user sirf spaces type kare toh bhi invalid maana jayega.</td></tr>
-    <tr><td><span class="inline-code">length &lt; 3</span></td><td>Title minimum 3 characters ka hona chahiye.</td></tr>
-    <tr><td><span class="inline-code">return "Title..."</span></td><td>Error message return karta hai. Is message ko API response mein bhejenge.</td></tr>
-    <tr><td><span class="inline-code">return null;</span></td><td>Null ka matlab koi error nahi, input valid hai.</td></tr>
+    <tr><th>Line / Code</th><th>Explanation</th></tr>
+    <tr><td><span class="code">function validateStudent(input)</span></td><td>Student data check karne ke liye reusable function.</td></tr>
+    <tr><td><span class="code">!input.name</span></td><td>Name missing hai ya nahi check karta hai.</td></tr>
+    <tr><td><span class="code">input.name.trim()</span></td><td>Name ke extra spaces remove karta hai.</td></tr>
+    <tr><td><span class="code">length &lt; 3</span></td><td>Name kam se kam 3 characters hona chahiye.</td></tr>
+    <tr><td><span class="code">input.email.includes("@")</span></td><td>Email mein @ hai ya nahi basic check karta hai.</td></tr>
+    <tr><td><span class="code">return "..."</span></td><td>Error message return karta hai.</td></tr>
+    <tr><td><span class="code">return null</span></td><td>Null ka matlab data valid hai.</td></tr>
   </table>
 
-  <h2 class="topic">9. Error Handling</h2>
-  <p>Error handling ka purpose hai backend ko crash hone se bachana and client ko clear response dena. Agar route nahi mila toh 404. Agar validation fail hua toh 400. Agar server mein unexpected issue hua toh 500.</p>
+  <h2 class="chapter">6.4 Common Errors</h2>
+  <table>
+    <tr><th>Error</th><th>Reason</th><th>Solution</th></tr>
+    <tr><td>Cannot read properties of undefined</td><td>request.body undefined hai.</td><td><span class="code">app.use(express.json())</span> add karo.</td></tr>
+    <tr><td>Blank data save ho raha</td><td>Validation function call nahi kiya.</td><td>Create/update controller mein validation call karo.</td></tr>
+  </table>
 
-  <span class="run-label">Error Middleware</span>
-  <pre><code>app.use(function (error, request, response, next) {
+  <section class="module-band">
+    <h2>7. Error Handling</h2>
+    <p>API ko stable and safe banana.</p>
+  </section>
+
+  <h2 class="chapter">7.1 Introduction</h2>
+  <p>Error handling ka matlab hai problem aane par backend ko crash hone se bachana aur client ko proper response dena. Agar student ID nahi mila toh 404. Agar input wrong hai toh 400. Agar server mein unexpected issue hai toh 500.</p>
+
+  <h2 class="chapter">7.2 Practical - Error Middleware</h2>
+  <span class="run-label">errorHandler.js</span>
+  <pre><code>function errorHandler(error, request, response, next) {
   console.error(error.message);
 
   response.status(500).json({
     success: false,
-    message: "Something went wrong on the server"
+    message: "Internal server error"
   });
-});</code></pre>
+}
 
+module.exports = errorHandler;</code></pre>
+
+  <h2 class="chapter">7.3 Code Explanation</h2>
   <table>
-    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">app.use(function (error, request, response, next)</span></td><td>Express error-handling middleware. Isme 4 parameters hote hain, pehla parameter <span class="inline-code">error</span> hota hai.</td></tr>
-    <tr><td><span class="inline-code">console.error(error.message);</span></td><td>Server terminal mein actual error print karta hai. Developer debugging ke liye use karega.</td></tr>
-    <tr><td><span class="inline-code">response.status(500)</span></td><td>Client ko batata hai server side error hua.</td></tr>
-    <tr><td><span class="inline-code">.json({...})</span></td><td>Error response JSON format mein bhejta hai. Frontend easily read kar sakta hai.</td></tr>
+    <tr><th>Line / Code</th><th>Explanation</th></tr>
+    <tr><td><span class="code">function errorHandler(error, request, response, next)</span></td><td>Express error middleware define karta hai. Error middleware mein 4 parameters hote hain.</td></tr>
+    <tr><td><span class="code">error</span></td><td>Actual error object store karta hai.</td></tr>
+    <tr><td><span class="code">console.error(error.message)</span></td><td>Developer ke liye terminal mein error message print karta hai.</td></tr>
+    <tr><td><span class="code">response.status(500)</span></td><td>Client ko server error status bhejta hai.</td></tr>
+    <tr><td><span class="code">success: false</span></td><td>Request fail hui, yeh batata hai.</td></tr>
+    <tr><td><span class="code">module.exports = errorHandler</span></td><td>Function ko server.js mein import karne ke liye export karta hai.</td></tr>
   </table>
 
-  <h2 class="topic">10. MVC Architecture</h2>
-  <p>MVC ka full form hai Model, View, Controller. API project mein View usually frontend hota hai, backend side par hum Model, Controller, Routes, and Middleware folders use karte hain. MVC ka goal hai code ko clean organize karna.</p>
+  <section class="module-band">
+    <h2>8. MVC Architecture</h2>
+    <p>Project ko clean folders mein divide karna.</p>
+  </section>
+
+  <h2 class="chapter">8.1 Introduction</h2>
+  <p>MVC ka full form hai Model, View, Controller. API backend mein hum usually routes, controllers, models/data, middleware, validators folders banate hain. Isse code easy to read, easy to debug, and easy to maintain hota hai.</p>
+
+  <h3>Need Kyu Padi?</h3>
+  <p>Agar saara code sirf <span class="code">server.js</span> mein likh denge, toh file very long and confusing ho jayegi. MVC code ko responsibility ke according divide karta hai.</p>
+
+  <div class="diagram">Request
+  ↓
+Route file
+  ↓
+Controller function
+  ↓
+Data / Model
+  ↓
+Response</div>
 
   <table>
-    <tr><th>Part</th><th>Meaning</th><th>Project Example</th></tr>
-    <tr><td>Model</td><td>Data structure and data logic</td><td>Course data ka format</td></tr>
-    <tr><td>Controller</td><td>Route ke actual logic functions</td><td>getCourses, createCourse, updateCourse</td></tr>
-    <tr><td>Routes</td><td>URL and HTTP methods define karna</td><td>/api/courses routes</td></tr>
-    <tr><td>Middleware</td><td>Request ke beech mein checks</td><td>logger, validation, error handler</td></tr>
+    <tr><th>Part</th><th>Work</th><th>Example File</th></tr>
+    <tr><td>Routes</td><td>URL and method define karna</td><td>routes/studentRoutes.js</td></tr>
+    <tr><td>Controller</td><td>Actual logic run karna</td><td>controllers/studentController.js</td></tr>
+    <tr><td>Data/Model</td><td>Data store or database model</td><td>data/students.js</td></tr>
+    <tr><td>Middleware</td><td>Request checks and error handling</td><td>middleware/logger.js</td></tr>
+    <tr><td>Validator</td><td>Input validation</td><td>validators/studentValidator.js</td></tr>
   </table>
 
-  <section class="box teach">
-    <h3>Simple Story</h3>
-    <p>Restaurant example: Route waiter hai jo order correct counter tak bhejta hai. Controller chef hai jo actual kaam karta hai. Model recipe/data format hai. Middleware gatekeeper hai jo order valid hai ya nahi check karta hai.</p>
+  <section class="module-band">
+    <h2>Project: Student Management REST API</h2>
+    <p>Ab complete project zero se build karte hain.</p>
   </section>
 
-  <section class="module">
-    <h2>Part 3 - Project 8: RESTful API Project</h2>
-    <p>Goal: Student Course REST API build karna with CRUD APIs, validation, error handling, and API testing.</p>
-  </section>
+  <h2 class="chapter">Project Introduction</h2>
+  <p>Hum ek Student Management API banayenge. Is API mein students ka data manage hoga. Features: Create Student, Read Students, Read Single Student, Update Student, Delete Student, Validation, Error Handling, MVC Structure, and Postman Testing.</p>
 
-  <h2 class="topic">Project Overview</h2>
-  <p>Hum ek Course Management REST API banayenge. Is project mein database use nahi karenge taaki beginners ko API concept clear ho. Data memory array mein store rahega. Real project mein same logic MongoDB/MySQL ke saath connect kiya ja sakta hai.</p>
-
-  <section class="box info">
+  <section class="box note">
     <h3>Project Features</h3>
-    <span class="pill">GET all courses</span>
-    <span class="pill">GET single course</span>
-    <span class="pill">POST new course</span>
-    <span class="pill">PUT update course</span>
-    <span class="pill">DELETE course</span>
+    <span class="pill">Create Student</span>
+    <span class="pill">Read Students</span>
+    <span class="pill">Update Student</span>
+    <span class="pill">Delete Student</span>
     <span class="pill">Validation</span>
-    <span class="pill">Error handling</span>
-    <span class="pill">API testing</span>
+    <span class="pill">Error Handling</span>
+    <span class="pill">MVC</span>
+    <span class="pill">Postman Testing</span>
   </section>
 
-  <h2 class="topic">Project Folder Structure</h2>
-  <span class="run-label">Folder Structure</span>
-  <pre><code>express-rest-api-project/
+  <h2 class="chapter">Project Step 1: Folder Setup</h2>
+  <span class="run-label">Terminal</span>
+  <pre><code>mkdir student-management-api
+cd student-management-api
+npm init -y
+npm install express</code></pre>
+
+  <h3>Expected Result</h3>
+  <p>Folder ke andar <span class="code">package.json</span>, <span class="code">package-lock.json</span>, and <span class="code">node_modules</span> create honge.</p>
+
+  <h2 class="chapter">Project Step 2: Folder Structure</h2>
+  <span class="run-label">Create this structure</span>
+  <pre><code>student-management-api/
   package.json
   server.js
   data/
-    courses.js
-  routes/
-    courseRoutes.js
+    students.js
+  validators/
+    studentValidator.js
   controllers/
-    courseController.js
+    studentController.js
+  routes/
+    studentRoutes.js
   middleware/
     logger.js
     notFound.js
-    errorHandler.js
-  validators/
-    courseValidator.js</code></pre>
+    errorHandler.js</code></pre>
 
   <table>
-    <tr><th>Folder / File</th><th>Purpose</th></tr>
-    <tr><td><span class="inline-code">server.js</span></td><td>Application ka entry point. Express app setup, middleware, routes, and server listen yahan hota hai.</td></tr>
-    <tr><td><span class="inline-code">data/courses.js</span></td><td>Temporary in-memory course data store karta hai.</td></tr>
-    <tr><td><span class="inline-code">routes/courseRoutes.js</span></td><td>Course API endpoints define karta hai.</td></tr>
-    <tr><td><span class="inline-code">controllers/courseController.js</span></td><td>Course CRUD logic yahan rahega.</td></tr>
-    <tr><td><span class="inline-code">middleware/logger.js</span></td><td>Har request ka method and URL terminal mein print karega.</td></tr>
-    <tr><td><span class="inline-code">middleware/notFound.js</span></td><td>Wrong route ke liye 404 response send karega.</td></tr>
-    <tr><td><span class="inline-code">middleware/errorHandler.js</span></td><td>Unexpected server errors handle karega.</td></tr>
-    <tr><td><span class="inline-code">validators/courseValidator.js</span></td><td>Course input validation logic store karega.</td></tr>
+    <tr><th>File</th><th>Purpose</th></tr>
+    <tr><td>server.js</td><td>Main Express app setup.</td></tr>
+    <tr><td>data/students.js</td><td>Temporary student data.</td></tr>
+    <tr><td>validators/studentValidator.js</td><td>Student input validation.</td></tr>
+    <tr><td>controllers/studentController.js</td><td>CRUD logic.</td></tr>
+    <tr><td>routes/studentRoutes.js</td><td>API routes.</td></tr>
+    <tr><td>middleware/logger.js</td><td>Request logging.</td></tr>
+    <tr><td>middleware/notFound.js</td><td>Wrong route handler.</td></tr>
+    <tr><td>middleware/errorHandler.js</td><td>Server error handler.</td></tr>
   </table>
 
-  <h2 class="topic">Step 1 - data/courses.js Banao</h2>
-  <p>Sabse pehle sample courses data create karte hain. Yeh temporary memory database jaisa kaam karega.</p>
-
-  <span class="run-label">data/courses.js</span>
-  <pre><code>let courses = [
+  <h2 class="chapter">Project Step 3: data/students.js</h2>
+  <span class="run-label">data/students.js</span>
+  <pre><code>let students = [
   {
     id: 1,
-    title: "HTML5 Web Page Structure",
-    duration: "2 days",
-    level: "Beginner"
+    name: "Rahul Sharma",
+    email: "rahul@example.com",
+    course: "MERN Stack"
   },
   {
     id: 2,
-    title: "CSS3 Responsive Design",
-    duration: "2 days",
-    level: "Beginner"
-  },
-  {
-    id: 3,
-    title: "JavaScript Fundamentals",
-    duration: "3 days",
-    level: "Beginner"
+    name: "Priya Singh",
+    email: "priya@example.com",
+    course: "Frontend Development"
   }
 ];
 
-module.exports = courses;</code></pre>
+module.exports = students;</code></pre>
 
+  <h3>Line-by-Line Explanation</h3>
   <table>
-    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">let courses = [</span></td><td>Courses naam ka array banaya. <span class="inline-code">let</span> use kiya kyunki array mein add/update/delete operations karenge.</td></tr>
-    <tr><td><span class="inline-code">{ id: 1, ... }</span></td><td>Har course ek object hai. Object course ki details key-value format mein rakhta hai.</td></tr>
-    <tr><td><span class="inline-code">id</span></td><td>Course ka unique identifier. Single course search, update, delete ke liye use hoga.</td></tr>
-    <tr><td><span class="inline-code">title</span></td><td>Course ka name. User ko course list mein title dikhaya jayega.</td></tr>
-    <tr><td><span class="inline-code">duration</span></td><td>Course complete karne ka time. Example: 2 days.</td></tr>
-    <tr><td><span class="inline-code">level</span></td><td>Course beginner, intermediate, ya advanced hai, yeh batata hai.</td></tr>
-    <tr><td><span class="inline-code">module.exports = courses;</span></td><td>Is data ko doosri files mein use karne ke liye export karta hai.</td></tr>
+    <tr><th>Line / Code</th><th>Explanation</th></tr>
+    <tr><td><span class="code">let students = [</span></td><td>Students array create karta hai. <span class="code">let</span> use kiya kyunki array mein add/update/delete hoga.</td></tr>
+    <tr><td><span class="code">{</span></td><td>Student object start hota hai.</td></tr>
+    <tr><td><span class="code">id: 1</span></td><td>Student ka unique ID.</td></tr>
+    <tr><td><span class="code">name</span></td><td>Student ka full name.</td></tr>
+    <tr><td><span class="code">email</span></td><td>Student ka email address.</td></tr>
+    <tr><td><span class="code">course</span></td><td>Student enrolled course.</td></tr>
+    <tr><td><span class="code">}</span></td><td>Student object close hota hai.</td></tr>
+    <tr><td><span class="code">];</span></td><td>Students array close hota hai.</td></tr>
+    <tr><td><span class="code">module.exports = students;</span></td><td>Students data ko controller mein import karne ke liye export karta hai.</td></tr>
   </table>
 
-  <h2 class="topic">Step 2 - validators/courseValidator.js Banao</h2>
-  <p>Validation separate file mein rakhna clean architecture hai. Controller ka kaam business logic rahega, validation ka kaam validator file karegi.</p>
-
-  <span class="run-label">validators/courseValidator.js</span>
-  <pre><code>function validateCourse(input) {
-  if (!input.title || input.title.trim().length < 3) {
-    return "Title must be at least 3 characters long";
+  <h2 class="chapter">Project Step 4: validators/studentValidator.js</h2>
+  <span class="run-label">validators/studentValidator.js</span>
+  <pre><code>function validateStudent(input) {
+  if (!input.name || input.name.trim().length < 3) {
+    return "Name must be at least 3 characters";
   }
 
-  if (!input.duration || input.duration.trim() === "") {
-    return "Duration is required";
+  if (!input.email || !input.email.includes("@")) {
+    return "Valid email is required";
   }
 
-  if (!input.level || input.level.trim() === "") {
-    return "Level is required";
+  if (!input.course || input.course.trim() === "") {
+    return "Course is required";
   }
 
   return null;
 }
 
-module.exports = validateCourse;</code></pre>
+module.exports = validateStudent;</code></pre>
 
+  <h3>Line-by-Line Explanation</h3>
   <table>
-    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">function validateCourse(input)</span></td><td>Course input check karne ke liye function banaya. <span class="inline-code">input</span> request body se aane wala object hoga.</td></tr>
-    <tr><td><span class="inline-code">!input.title</span></td><td>Agar title missing hai toh condition true hogi.</td></tr>
-    <tr><td><span class="inline-code">input.title.trim()</span></td><td>Title ke start/end spaces remove karta hai. Sirf spaces wali value accept nahi honi chahiye.</td></tr>
-    <tr><td><span class="inline-code">length &lt; 3</span></td><td>Title at least 3 characters ka hona chahiye. Example: <span class="inline-code">JS</span> too short hai.</td></tr>
-    <tr><td><span class="inline-code">return "Title..."</span></td><td>Validation fail hone par readable error message return karta hai.</td></tr>
-    <tr><td><span class="inline-code">duration.trim() === ""</span></td><td>Duration blank ya spaces only hai toh invalid.</td></tr>
-    <tr><td><span class="inline-code">level.trim() === ""</span></td><td>Level blank nahi hona chahiye.</td></tr>
-    <tr><td><span class="inline-code">return null;</span></td><td>Sab checks pass ho gaye. Null ka matlab no validation error.</td></tr>
-    <tr><td><span class="inline-code">module.exports = validateCourse;</span></td><td>Function ko controller file mein import karne ke liye export karta hai.</td></tr>
+    <tr><th>Line / Code</th><th>Explanation</th></tr>
+    <tr><td><span class="code">function validateStudent(input)</span></td><td>Student data validate karne ke liye function define karta hai.</td></tr>
+    <tr><td><span class="code">input</span></td><td>Request body se aane wala student data.</td></tr>
+    <tr><td><span class="code">if (!input.name ...)</span></td><td>Name missing ya short hai toh error.</td></tr>
+    <tr><td><span class="code">trim()</span></td><td>Extra spaces remove karta hai.</td></tr>
+    <tr><td><span class="code">length &lt; 3</span></td><td>Name minimum 3 characters hona chahiye.</td></tr>
+    <tr><td><span class="code">includes("@")</span></td><td>Email mein @ check karta hai.</td></tr>
+    <tr><td><span class="code">course.trim() === ""</span></td><td>Course blank nahi hona chahiye.</td></tr>
+    <tr><td><span class="code">return null</span></td><td>Koi error nahi hai.</td></tr>
+    <tr><td><span class="code">module.exports</span></td><td>Function export karta hai.</td></tr>
   </table>
 
-  <h2 class="topic">Step 3 - controllers/courseController.js Banao</h2>
-  <p>Controller file API ka main logic handle karti hai. Route sirf request ko controller function tak bhejega. Controller decide karega data kaise read/create/update/delete karna hai.</p>
+  <h2 class="chapter">Project Step 5: controllers/studentController.js</h2>
+  <span class="run-label">controllers/studentController.js</span>
+  <pre><code>const students = require("../data/students");
+const validateStudent = require("../validators/studentValidator");
 
-  <span class="run-label">controllers/courseController.js</span>
-  <pre><code>const courses = require("../data/courses");
-const validateCourse = require("../validators/courseValidator");
-
-function getAllCourses(request, response) {
+function getAllStudents(request, response) {
   response.status(200).json({
     success: true,
-    count: courses.length,
-    data: courses
+    count: students.length,
+    data: students
   });
 }
 
-function getCourseById(request, response) {
-  const courseId = Number(request.params.id);
-  const course = courses.find(function (item) {
-    return item.id === courseId;
+function getStudentById(request, response) {
+  const studentId = Number(request.params.id);
+  const student = students.find(function (item) {
+    return item.id === studentId;
   });
 
-  if (!course) {
+  if (!student) {
     return response.status(404).json({
       success: false,
-      message: "Course not found"
+      message: "Student not found"
     });
   }
 
   response.status(200).json({
     success: true,
-    data: course
+    data: student
   });
 }
 
-function createCourse(request, response) {
-  const validationError = validateCourse(request.body);
+function createStudent(request, response) {
+  const validationError = validateStudent(request.body);
 
   if (validationError) {
     return response.status(400).json({
@@ -588,36 +887,36 @@ function createCourse(request, response) {
     });
   }
 
-  const newCourse = {
-    id: courses.length + 1,
-    title: request.body.title.trim(),
-    duration: request.body.duration.trim(),
-    level: request.body.level.trim()
+  const newStudent = {
+    id: students.length + 1,
+    name: request.body.name.trim(),
+    email: request.body.email.trim(),
+    course: request.body.course.trim()
   };
 
-  courses.push(newCourse);
+  students.push(newStudent);
 
   response.status(201).json({
     success: true,
-    message: "Course created successfully",
-    data: newCourse
+    message: "Student created successfully",
+    data: newStudent
   });
 }
 
-function updateCourse(request, response) {
-  const courseId = Number(request.params.id);
-  const course = courses.find(function (item) {
-    return item.id === courseId;
+function updateStudent(request, response) {
+  const studentId = Number(request.params.id);
+  const student = students.find(function (item) {
+    return item.id === studentId;
   });
 
-  if (!course) {
+  if (!student) {
     return response.status(404).json({
       success: false,
-      message: "Course not found"
+      message: "Student not found"
     });
   }
 
-  const validationError = validateCourse(request.body);
+  const validationError = validateStudent(request.body);
 
   if (validationError) {
     return response.status(400).json({
@@ -626,108 +925,106 @@ function updateCourse(request, response) {
     });
   }
 
-  course.title = request.body.title.trim();
-  course.duration = request.body.duration.trim();
-  course.level = request.body.level.trim();
+  student.name = request.body.name.trim();
+  student.email = request.body.email.trim();
+  student.course = request.body.course.trim();
 
   response.status(200).json({
     success: true,
-    message: "Course updated successfully",
-    data: course
+    message: "Student updated successfully",
+    data: student
   });
 }
 
-function deleteCourse(request, response) {
-  const courseId = Number(request.params.id);
-  const courseIndex = courses.findIndex(function (item) {
-    return item.id === courseId;
+function deleteStudent(request, response) {
+  const studentId = Number(request.params.id);
+  const studentIndex = students.findIndex(function (item) {
+    return item.id === studentId;
   });
 
-  if (courseIndex === -1) {
+  if (studentIndex === -1) {
     return response.status(404).json({
       success: false,
-      message: "Course not found"
+      message: "Student not found"
     });
   }
 
-  const deletedCourse = courses.splice(courseIndex, 1);
+  const deletedStudent = students.splice(studentIndex, 1);
 
   response.status(200).json({
     success: true,
-    message: "Course deleted successfully",
-    data: deletedCourse[0]
+    message: "Student deleted successfully",
+    data: deletedStudent[0]
   });
 }
 
 module.exports = {
-  getAllCourses,
-  getCourseById,
-  createCourse,
-  updateCourse,
-  deleteCourse
+  getAllStudents,
+  getStudentById,
+  createStudent,
+  updateStudent,
+  deleteStudent
 };</code></pre>
 
-  <h3 class="subtopic">Controller Code Explanation - Important Lines</h3>
+  <h3>Important Line Explanation</h3>
   <table>
-    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">const courses = require("../data/courses");</span></td><td>Courses array ko data file se import karta hai. Controller ko data read/update karne ke liye yeh array chahiye.</td></tr>
-    <tr><td><span class="inline-code">const validateCourse = require(...)</span></td><td>Validation function import karta hai. Create and update ke time input check karne ke liye use hoga.</td></tr>
-    <tr><td><span class="inline-code">function getAllCourses(...)</span></td><td>Saare courses list karne ka controller function.</td></tr>
-    <tr><td><span class="inline-code">response.status(200).json(...)</span></td><td>Success status 200 ke saath JSON response send karta hai.</td></tr>
-    <tr><td><span class="inline-code">count: courses.length</span></td><td>Total courses count response mein include karta hai.</td></tr>
-    <tr><td><span class="inline-code">Number(request.params.id)</span></td><td>URL se aayi ID string hoti hai. Usko number mein convert karta hai.</td></tr>
-    <tr><td><span class="inline-code">courses.find(...)</span></td><td>Array mein matching ID wala first course search karta hai.</td></tr>
-    <tr><td><span class="inline-code">if (!course)</span></td><td>Agar course nahi mila toh 404 response bhejna hai.</td></tr>
-    <tr><td><span class="inline-code">return response.status(404)...</span></td><td>Return use karne se function yahin stop ho jata hai. Iske baad success response accidentally nahi bheja jayega.</td></tr>
-    <tr><td><span class="inline-code">validateCourse(request.body)</span></td><td>Client se aaye JSON body ko validate karta hai.</td></tr>
-    <tr><td><span class="inline-code">id: courses.length + 1</span></td><td>Simple demo ID generate karta hai. Real database mein ID database generate karta hai.</td></tr>
-    <tr><td><span class="inline-code">courses.push(newCourse)</span></td><td>New course ko array ke end mein add karta hai.</td></tr>
-    <tr><td><span class="inline-code">response.status(201)</span></td><td>201 Created ka matlab new resource successfully create ho gaya.</td></tr>
-    <tr><td><span class="inline-code">courses.findIndex(...)</span></td><td>Delete ke liye course ka index find karta hai. Index array position hoti hai.</td></tr>
-    <tr><td><span class="inline-code">courseIndex === -1</span></td><td>findIndex agar item nahi paata toh -1 return karta hai.</td></tr>
-    <tr><td><span class="inline-code">courses.splice(courseIndex, 1)</span></td><td>Array se one item remove karta hai. Yeh deleted item array ke form mein return karta hai.</td></tr>
-    <tr><td><span class="inline-code">module.exports = {...}</span></td><td>All controller functions ko route file mein use karne ke liye export karta hai.</td></tr>
+    <tr><th>Line / Code</th><th>Explanation</th></tr>
+    <tr><td><span class="code">require("../data/students")</span></td><td>Students data import karta hai.</td></tr>
+    <tr><td><span class="code">require("../validators/studentValidator")</span></td><td>Validation function import karta hai.</td></tr>
+    <tr><td><span class="code">getAllStudents</span></td><td>All students return karta hai.</td></tr>
+    <tr><td><span class="code">response.status(200).json(...)</span></td><td>Success JSON response send karta hai.</td></tr>
+    <tr><td><span class="code">Number(request.params.id)</span></td><td>URL ID ko string se number mein convert karta hai.</td></tr>
+    <tr><td><span class="code">students.find(...)</span></td><td>Matching ID wala student search karta hai.</td></tr>
+    <tr><td><span class="code">if (!student)</span></td><td>Student not found condition.</td></tr>
+    <tr><td><span class="code">return response.status(404)</span></td><td>404 response bhejkar function stop karta hai.</td></tr>
+    <tr><td><span class="code">validateStudent(request.body)</span></td><td>Request body validate karta hai.</td></tr>
+    <tr><td><span class="code">response.status(400)</span></td><td>Bad input ke liye error response.</td></tr>
+    <tr><td><span class="code">students.push(newStudent)</span></td><td>New student array mein add karta hai.</td></tr>
+    <tr><td><span class="code">response.status(201)</span></td><td>New student create hone ka status.</td></tr>
+    <tr><td><span class="code">student.name = ...</span></td><td>Existing student ka data update karta hai.</td></tr>
+    <tr><td><span class="code">findIndex</span></td><td>Delete ke liye student ki position find karta hai.</td></tr>
+    <tr><td><span class="code">splice(studentIndex, 1)</span></td><td>Array se one student remove karta hai.</td></tr>
+    <tr><td><span class="code">module.exports = {...}</span></td><td>Functions ko route file mein use karne ke liye export karta hai.</td></tr>
   </table>
 
-  <h2 class="topic">Step 4 - routes/courseRoutes.js Banao</h2>
-  <p>Routes file URL and controller function ko connect karti hai. Isse server.js clean rehta hai.</p>
-
-  <span class="run-label">routes/courseRoutes.js</span>
+  <h2 class="chapter">Project Step 6: routes/studentRoutes.js</h2>
+  <span class="run-label">routes/studentRoutes.js</span>
   <pre><code>const express = require("express");
 const router = express.Router();
 
 const {
-  getAllCourses,
-  getCourseById,
-  createCourse,
-  updateCourse,
-  deleteCourse
-} = require("../controllers/courseController");
+  getAllStudents,
+  getStudentById,
+  createStudent,
+  updateStudent,
+  deleteStudent
+} = require("../controllers/studentController");
 
-router.get("/", getAllCourses);
-router.get("/:id", getCourseById);
-router.post("/", createCourse);
-router.put("/:id", updateCourse);
-router.delete("/:id", deleteCourse);
+router.get("/", getAllStudents);
+router.get("/:id", getStudentById);
+router.post("/", createStudent);
+router.put("/:id", updateStudent);
+router.delete("/:id", deleteStudent);
 
 module.exports = router;</code></pre>
 
+  <h3>Line-by-Line Explanation</h3>
   <table>
-    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">const express = require("express");</span></td><td>Express import karta hai kyunki router create karna hai.</td></tr>
-    <tr><td><span class="inline-code">const router = express.Router();</span></td><td>Mini Express router object create karta hai. Isme related routes group karte hain.</td></tr>
-    <tr><td><span class="inline-code">require("../controllers/courseController")</span></td><td>Controller functions import karta hai.</td></tr>
-    <tr><td><span class="inline-code">router.get("/", getAllCourses)</span></td><td><span class="inline-code">GET /api/courses</span> request ko getAllCourses controller se connect karta hai.</td></tr>
-    <tr><td><span class="inline-code">router.get("/:id", getCourseById)</span></td><td><span class="inline-code">:id</span> dynamic route parameter hai. Example: /api/courses/2.</td></tr>
-    <tr><td><span class="inline-code">router.post("/", createCourse)</span></td><td>New course create karne ke liye POST route.</td></tr>
-    <tr><td><span class="inline-code">router.put("/:id", updateCourse)</span></td><td>Existing course update karne ke liye PUT route.</td></tr>
-    <tr><td><span class="inline-code">router.delete("/:id", deleteCourse)</span></td><td>Course delete karne ke liye DELETE route.</td></tr>
-    <tr><td><span class="inline-code">module.exports = router;</span></td><td>Router ko server.js mein use karne ke liye export karta hai.</td></tr>
+    <tr><th>Line / Code</th><th>Explanation</th></tr>
+    <tr><td><span class="code">const express = require("express");</span></td><td>Express import karta hai.</td></tr>
+    <tr><td><span class="code">const router = express.Router();</span></td><td>Mini router object create karta hai.</td></tr>
+    <tr><td><span class="code">const { ... } = require(...)</span></td><td>Controller functions import karta hai.</td></tr>
+    <tr><td><span class="code">router.get("/", getAllStudents)</span></td><td>GET /api/students route handle karta hai.</td></tr>
+    <tr><td><span class="code">router.get("/:id", getStudentById)</span></td><td>GET /api/students/1 route handle karta hai.</td></tr>
+    <tr><td><span class="code">router.post("/", createStudent)</span></td><td>POST /api/students route handle karta hai.</td></tr>
+    <tr><td><span class="code">router.put("/:id", updateStudent)</span></td><td>PUT /api/students/1 route handle karta hai.</td></tr>
+    <tr><td><span class="code">router.delete("/:id", deleteStudent)</span></td><td>DELETE /api/students/1 route handle karta hai.</td></tr>
+    <tr><td><span class="code">module.exports = router</span></td><td>Router export karta hai.</td></tr>
   </table>
 
-  <h2 class="topic">Step 5 - Middleware Files Banao</h2>
+  <h2 class="chapter">Project Step 7: Middleware Files</h2>
 
-  <h3 class="subtopic">logger.js</h3>
+  <h3>middleware/logger.js</h3>
   <span class="run-label">middleware/logger.js</span>
   <pre><code>function logger(request, response, next) {
   console.log(request.method + " " + request.originalUrl);
@@ -736,15 +1033,7 @@ module.exports = router;</code></pre>
 
 module.exports = logger;</code></pre>
 
-  <table>
-    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">function logger(...)</span></td><td>Custom middleware function. Har request ke time terminal log show karega.</td></tr>
-    <tr><td><span class="inline-code">request.method</span></td><td>GET, POST, PUT, DELETE method print karta hai.</td></tr>
-    <tr><td><span class="inline-code">request.originalUrl</span></td><td>Complete requested URL path print karta hai.</td></tr>
-    <tr><td><span class="inline-code">next();</span></td><td>Request ko next step tak bhejta hai. Middleware ka traffic signal green karta hai.</td></tr>
-  </table>
-
-  <h3 class="subtopic">notFound.js</h3>
+  <h3>middleware/notFound.js</h3>
   <span class="run-label">middleware/notFound.js</span>
   <pre><code>function notFound(request, response) {
   response.status(404).json({
@@ -755,15 +1044,7 @@ module.exports = logger;</code></pre>
 
 module.exports = notFound;</code></pre>
 
-  <table>
-    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">function notFound(...)</span></td><td>Wrong route ke liye fallback middleware.</td></tr>
-    <tr><td><span class="inline-code">response.status(404)</span></td><td>404 status set karta hai. Matlab requested API route available nahi hai.</td></tr>
-    <tr><td><span class="inline-code">success: false</span></td><td>Client ko clear signal deta hai ki request successful nahi hui.</td></tr>
-    <tr><td><span class="inline-code">message</span></td><td>Human-readable error message.</td></tr>
-  </table>
-
-  <h3 class="subtopic">errorHandler.js</h3>
+  <h3>middleware/errorHandler.js</h3>
   <span class="run-label">middleware/errorHandler.js</span>
   <pre><code>function errorHandler(error, request, response, next) {
   console.error(error.message);
@@ -776,20 +1057,10 @@ module.exports = notFound;</code></pre>
 
 module.exports = errorHandler;</code></pre>
 
-  <table>
-    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">function errorHandler(error, request, response, next)</span></td><td>Express error middleware. Four parameters hone chahiye, tab Express isko error handler samajhta hai.</td></tr>
-    <tr><td><span class="inline-code">console.error(error.message)</span></td><td>Actual error terminal mein print karta hai. Client ko full technical error nahi dikhana chahiye.</td></tr>
-    <tr><td><span class="inline-code">response.status(500)</span></td><td>Server side problem ka status code.</td></tr>
-    <tr><td><span class="inline-code">message: "Internal server error"</span></td><td>Client ko safe general message bhejta hai.</td></tr>
-  </table>
-
-  <h2 class="topic">Step 6 - server.js Final Setup</h2>
-  <p>Ab saare folders and files ko main server file mein connect karte hain. Yeh project ka entry point hai.</p>
-
+  <h2 class="chapter">Project Step 8: server.js</h2>
   <span class="run-label">server.js</span>
   <pre><code>const express = require("express");
-const courseRoutes = require("./routes/courseRoutes");
+const studentRoutes = require("./routes/studentRoutes");
 const logger = require("./middleware/logger");
 const notFound = require("./middleware/notFound");
 const errorHandler = require("./middleware/errorHandler");
@@ -803,146 +1074,129 @@ app.use(logger);
 app.get("/", function (request, response) {
   response.status(200).json({
     success: true,
-    message: "Welcome to Student Course REST API",
+    message: "Welcome to Student Management API",
     endpoints: {
-      courses: "/api/courses",
-      singleCourse: "/api/courses/:id"
+      students: "/api/students",
+      singleStudent: "/api/students/:id"
     }
   });
 });
 
-app.use("/api/courses", courseRoutes);
+app.use("/api/students", studentRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 
 app.listen(PORT, function () {
-  console.log("Express API running on http://localhost:" + PORT);
+  console.log("Student API running on http://localhost:" + PORT);
 });</code></pre>
 
+  <h3>server.js Line Explanation</h3>
   <table>
-    <tr><th>Line / Code</th><th>Detailed Explanation</th></tr>
-    <tr><td><span class="inline-code">const express = require("express");</span></td><td>Express framework import karta hai.</td></tr>
-    <tr><td><span class="inline-code">const courseRoutes = require(...)</span></td><td>Course API routes import karta hai.</td></tr>
-    <tr><td><span class="inline-code">const logger = require(...)</span></td><td>Request logging middleware import karta hai.</td></tr>
-    <tr><td><span class="inline-code">const notFound = require(...)</span></td><td>404 middleware import karta hai.</td></tr>
-    <tr><td><span class="inline-code">const errorHandler = require(...)</span></td><td>500 error middleware import karta hai.</td></tr>
-    <tr><td><span class="inline-code">const app = express();</span></td><td>Express app create karta hai. Routes and middleware isi app par attach honge.</td></tr>
-    <tr><td><span class="inline-code">const PORT = 3000;</span></td><td>Server port set karta hai.</td></tr>
-    <tr><td><span class="inline-code">app.use(express.json());</span></td><td>JSON request body ko read karne ke liye middleware. POST and PUT mein required hai.</td></tr>
-    <tr><td><span class="inline-code">app.use(logger);</span></td><td>Har request ka method and URL terminal mein show karega.</td></tr>
-    <tr><td><span class="inline-code">app.get("/", ...)</span></td><td>Home route. API ka welcome response and endpoints info deta hai.</td></tr>
-    <tr><td><span class="inline-code">app.use("/api/courses", courseRoutes);</span></td><td>Course routes ko base path ke saath mount karta hai. Ab router ke routes /api/courses se start honge.</td></tr>
-    <tr><td><span class="inline-code">app.use(notFound);</span></td><td>All valid routes ke baad rakha jata hai. Agar koi route match nahi hua toh 404 response.</td></tr>
-    <tr><td><span class="inline-code">app.use(errorHandler);</span></td><td>Sabse end mein error handler rakha jata hai.</td></tr>
-    <tr><td><span class="inline-code">app.listen(PORT, ...)</span></td><td>Server start karta hai and terminal mein URL print karta hai.</td></tr>
+    <tr><th>Line / Code</th><th>Explanation</th></tr>
+    <tr><td><span class="code">const express = require("express");</span></td><td>Express framework import karta hai.</td></tr>
+    <tr><td><span class="code">studentRoutes</span></td><td>Student routes file import karta hai.</td></tr>
+    <tr><td><span class="code">logger</span></td><td>Request logging middleware import karta hai.</td></tr>
+    <tr><td><span class="code">notFound</span></td><td>404 route handler import karta hai.</td></tr>
+    <tr><td><span class="code">errorHandler</span></td><td>Server error handler import karta hai.</td></tr>
+    <tr><td><span class="code">const app = express();</span></td><td>Main Express app create karta hai.</td></tr>
+    <tr><td><span class="code">const PORT = 3000;</span></td><td>Server port set karta hai.</td></tr>
+    <tr><td><span class="code">app.use(express.json());</span></td><td>JSON body parser enable karta hai.</td></tr>
+    <tr><td><span class="code">app.use(logger);</span></td><td>Har request ka log terminal mein print karega.</td></tr>
+    <tr><td><span class="code">app.get("/", ...)</span></td><td>Home route create karta hai.</td></tr>
+    <tr><td><span class="code">app.use("/api/students", studentRoutes);</span></td><td>Student routes ko /api/students base URL se connect karta hai.</td></tr>
+    <tr><td><span class="code">app.use(notFound);</span></td><td>Wrong route handle karta hai. Isko routes ke baad rakhte hain.</td></tr>
+    <tr><td><span class="code">app.use(errorHandler);</span></td><td>Unexpected errors handle karta hai. Isko end mein rakhte hain.</td></tr>
+    <tr><td><span class="code">app.listen(PORT, ...)</span></td><td>Server start karta hai.</td></tr>
   </table>
 
-  <section class="box info">
-    <h3>Run Project</h3>
-    <span class="run-label">Terminal</span>
-    <pre><code>npm start</code></pre>
-    <p>Expected terminal output: <span class="inline-code">Express API running on http://localhost:3000</span></p>
-  </section>
+  <h2 class="chapter">Project Step 9: Run Project</h2>
+  <span class="run-label">Terminal</span>
+  <pre><code>node server.js</code></pre>
 
-  <h2 class="topic">API Testing - Browser, Postman, Thunder Client, or curl</h2>
-  <p>API testing ka matlab verify karna ki backend routes correct response de rahe hain ya nahi. GET routes browser se test ho sakte hain. POST/PUT/DELETE ke liye Postman, Thunder Client, or curl useful hai.</p>
+  <span class="run-label">Expected Output</span>
+  <pre><code>Student API running on http://localhost:3000</code></pre>
 
-  <h3 class="subtopic">Test 1 - Home Route</h3>
-  <span class="run-label">Browser / GET</span>
-  <pre><code>http://localhost:3000/</code></pre>
-  <p>Expected output: Welcome message with endpoints.</p>
-
-  <h3 class="subtopic">Test 2 - Get All Courses</h3>
-  <span class="run-label">GET</span>
-  <pre><code>http://localhost:3000/api/courses</code></pre>
-  <p>Expected output: All courses list in JSON.</p>
-
-  <h3 class="subtopic">Test 3 - Get Single Course</h3>
-  <span class="run-label">GET</span>
-  <pre><code>http://localhost:3000/api/courses/1</code></pre>
-  <p>Expected output: Course with ID 1.</p>
-
-  <h3 class="subtopic">Test 4 - Create Course</h3>
-  <span class="run-label">POST /api/courses</span>
-  <pre><code>{
-  "title": "Express REST API",
-  "duration": "2 days",
-  "level": "Intermediate"
-}</code></pre>
+  <h2 class="chapter">Project Step 10: Postman Testing</h2>
+  <p>Postman mein method select karo, URL daalo, Body tab mein JSON data add karo, phir Send click karo.</p>
 
   <table>
-    <tr><th>Testing Step</th><th>Explanation</th></tr>
-    <tr><td>Method: POST</td><td>POST new data create karne ke liye use hota hai.</td></tr>
-    <tr><td>URL: /api/courses</td><td>Course resource collection par new course add karna hai.</td></tr>
-    <tr><td>Body: JSON</td><td>Title, duration, and level send karna hai.</td></tr>
-    <tr><td>Expected Status: 201</td><td>New course created successfully.</td></tr>
+    <tr><th>Test</th><th>Method</th><th>URL</th><th>Expected Result</th></tr>
+    <tr><td>Home</td><td>GET</td><td><span class="code">http://localhost:3000/</span></td><td>Welcome JSON</td></tr>
+    <tr><td>Read All</td><td>GET</td><td><span class="code">http://localhost:3000/api/students</span></td><td>All students list</td></tr>
+    <tr><td>Read One</td><td>GET</td><td><span class="code">http://localhost:3000/api/students/1</span></td><td>Student ID 1</td></tr>
+    <tr><td>Create</td><td>POST</td><td><span class="code">http://localhost:3000/api/students</span></td><td>New student created</td></tr>
+    <tr><td>Update</td><td>PUT</td><td><span class="code">http://localhost:3000/api/students/1</span></td><td>Student updated</td></tr>
+    <tr><td>Delete</td><td>DELETE</td><td><span class="code">http://localhost:3000/api/students/1</span></td><td>Student deleted</td></tr>
   </table>
 
-  <h3 class="subtopic">Test 5 - Validation Error</h3>
-  <span class="run-label">POST /api/courses</span>
+  <h3>POST Body Example</h3>
+  <span class="run-label">JSON Body</span>
   <pre><code>{
-  "title": "JS",
-  "duration": "",
-  "level": "Beginner"
+  "name": "Aman Khan",
+  "email": "aman@example.com",
+  "course": "Backend Development"
 }</code></pre>
-  <p>Expected output: 400 Bad Request with validation message.</p>
 
-  <h3 class="subtopic">Test 6 - Update Course</h3>
-  <span class="run-label">PUT /api/courses/1</span>
+  <h3>Validation Error Test</h3>
+  <span class="run-label">Invalid JSON Body</span>
   <pre><code>{
-  "title": "HTML5 Complete Basics",
-  "duration": "3 days",
-  "level": "Beginner"
+  "name": "A",
+  "email": "wrongemail",
+  "course": ""
 }</code></pre>
-  <p>Expected output: Course ID 1 updated successfully.</p>
+  <p>Expected output: 400 Bad Request with validation error message.</p>
 
-  <h3 class="subtopic">Test 7 - Delete Course</h3>
-  <span class="run-label">DELETE</span>
-  <pre><code>http://localhost:3000/api/courses/1</code></pre>
-  <p>Expected output: Course deleted successfully.</p>
-
-  <h3 class="subtopic">Test 8 - Wrong Route</h3>
-  <span class="run-label">GET</span>
-  <pre><code>http://localhost:3000/api/wrong</code></pre>
-  <p>Expected output: 404 API route not found.</p>
-
-  <section class="box warn">
-    <h2>Common Beginner Mistakes</h2>
-    <ul>
-      <li><span class="inline-code">app.use(express.json())</span> miss karna. Isse <span class="inline-code">request.body</span> undefined ho sakta hai.</li>
-      <li><span class="inline-code">next()</span> custom middleware mein miss karna. Request route tak nahi jayegi.</li>
-      <li>POST request browser address bar se test karna. Browser address bar mostly GET request bhejta hai.</li>
-      <li>Route order galat rakhna. 404 middleware hamesha valid routes ke baad hona chahiye.</li>
-      <li>ID string ko number mein convert na karna. <span class="inline-code">"1"</span> and <span class="inline-code">1</span> strict comparison mein same nahi hote.</li>
-      <li>Validation ke bina data save karna. Dirty data API quality kharab karta hai.</li>
-    </ul>
+  <section class="box warning">
+    <h2>Project Common Errors</h2>
+    <table>
+      <tr><th>Error</th><th>Reason</th><th>Solution</th></tr>
+      <tr><td>request.body undefined</td><td><span class="code">express.json()</span> missing.</td><td>Add <span class="code">app.use(express.json())</span>.</td></tr>
+      <tr><td>Cannot find module</td><td>File path wrong hai.</td><td>Import path carefully check karo.</td></tr>
+      <tr><td>Cannot GET /api/students</td><td>Route connect nahi hua.</td><td><span class="code">app.use("/api/students", studentRoutes)</span> check karo.</td></tr>
+      <tr><td>Port already in use</td><td>Old server running.</td><td>Old terminal stop karo with Ctrl + C.</td></tr>
+      <tr><td>Postman body empty aa raha</td><td>Body raw JSON select nahi kiya.</td><td>Postman mein Body &gt; raw &gt; JSON select karo.</td></tr>
+    </table>
   </section>
 
-  <section class="box teach">
-    <h2>Final Revision Summary</h2>
-    <p>Express.js Node.js backend development ko simple and organized banata hai. Routing URL ke according controller function run karwati hai. Middleware request-response cycle ke beech ka checkpoint hai. REST API resources and HTTP methods ke standard rules follow karti hai. CRUD operations almost har app ka base hoti hain. Validation wrong input ko stop karta hai. Error handling backend ko stable rakhta hai. MVC architecture code ko clean folders mein divide karta hai.</p>
-    <p>Is project ke baad learner ko yeh samajh aa jana chahiye ki frontend ka form API ko request bhej sakta hai, Express server request receive karta hai, route controller ko call karta hai, controller data process karta hai, validation input check karta hai, and response JSON format mein client ko wapas milta hai.</p>
+  <section class="box teacher">
+    <h2>Final Revision</h2>
+    <p>Express.js Node.js ka framework hai jo backend APIs easy banata hai. Routing URL ke according function run karti hai. Middleware request ke beech mein checking/logging/parsing karta hai. REST API resources ko HTTP methods ke through manage karti hai. CRUD operations data create, read, update, delete karte hain. Validation wrong input ko stop karti hai. Error handling backend ko stable banati hai. MVC architecture code ko clean folders mein divide karta hai.</p>
   </section>
 
-  <section class="toc">
-    <h2>Practice Questions</h2>
+  <section class="box">
+    <h2>Cheat Sheet</h2>
+    <table>
+      <tr><th>Concept</th><th>Code</th><th>Use</th></tr>
+      <tr><td>Install Express</td><td><span class="code">npm install express</span></td><td>Express package install</td></tr>
+      <tr><td>Create App</td><td><span class="code">const app = express()</span></td><td>Express app create</td></tr>
+      <tr><td>JSON Middleware</td><td><span class="code">app.use(express.json())</span></td><td>Request body read</td></tr>
+      <tr><td>GET Route</td><td><span class="code">app.get()</span></td><td>Read data</td></tr>
+      <tr><td>POST Route</td><td><span class="code">app.post()</span></td><td>Create data</td></tr>
+      <tr><td>PUT Route</td><td><span class="code">app.put()</span></td><td>Update data</td></tr>
+      <tr><td>DELETE Route</td><td><span class="code">app.delete()</span></td><td>Delete data</td></tr>
+      <tr><td>Start Server</td><td><span class="code">app.listen()</span></td><td>Server run</td></tr>
+    </table>
+  </section>
+
+  <section class="box">
+    <h2>Final Interview Questions</h2>
     <ol>
-      <li>Express.js kya hai and Node.js core HTTP module se kaise different hai?</li>
-      <li>Middleware ka role kya hota hai?</li>
-      <li><span class="inline-code">next()</span> call karna kyun important hai?</li>
-      <li>REST API mein GET and POST ka difference kya hai?</li>
-      <li>PUT and DELETE routes ka use kab hota hai?</li>
-      <li>Validation fail hone par kaunsa status code use karna chahiye?</li>
-      <li>404 and 500 status code mein kya difference hai?</li>
-      <li>MVC architecture project ko clean kaise banata hai?</li>
-      <li><span class="inline-code">express.json()</span> middleware ka use kya hai?</li>
-      <li>Course API mein ek new field <span class="inline-code">fee</span> add karo and validation update karo.</li>
-      <li>Ek route banao: <span class="inline-code">GET /api/courses/search/:level</span> jo level ke according courses filter kare.</li>
-      <li>Postman/Thunder Client se POST, PUT, DELETE request test karo and screenshots lo.</li>
+      <li>Express.js kya hai?</li>
+      <li>Express.js Node.js se kaise different hai?</li>
+      <li>Middleware kya hota hai?</li>
+      <li>next() ka use kya hai?</li>
+      <li>REST API kya hoti hai?</li>
+      <li>GET and POST mein difference kya hai?</li>
+      <li>PUT and PATCH mein basic difference kya hai?</li>
+      <li>CRUD ka full form kya hai?</li>
+      <li>Validation kyun important hai?</li>
+      <li>404 and 500 status codes ka difference kya hai?</li>
+      <li>MVC architecture ka benefit kya hai?</li>
+      <li>Postman kyun use karte hain?</li>
     </ol>
   </section>
-</main>
 
+</main>
 </body>
 </html>
